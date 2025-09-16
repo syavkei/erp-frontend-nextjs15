@@ -1,11 +1,26 @@
+"use client";
 import { AppSidebar } from "@/components/app-sidebar";
 import { ChartAreaInteractive } from "@/components/chart-area-interactive";
 import { DataTable } from "@/components/data-table";
 import { SectionCards } from "@/components/section-cards";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { LoaderCircle } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 export default function DashboardLayout({ children }) {
+  const { status } = useSession();
+
+  if (status === "loading") {
+    return (
+      <LoaderCircle className="animate-spin mx-auto h-screen text-gray-500" />
+    );
+  }
+
+  if (status === "unauthenticated") {
+    redirect("/login");
+  }
   return (
     <SidebarProvider
       style={{
